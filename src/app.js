@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+require("dotenv").config();
 //middlewares
 app.use(cors());
 app.use(express.json());
@@ -12,8 +13,8 @@ var nodemailer = require("nodemailer");
 var transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "joseluissequeirag@gmail.com",
-    pass: "ovewlqjeudnkvoiq",
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
   },
 });
 //send email
@@ -22,8 +23,8 @@ router.post("/email", (req, res) => {
     if (!req.body.text || !req.body.companyemail || !req.body.subject)
       return res.json({ message: "complete all fields" });
     var mailOptions = {
-      from: "joseluissequeirag@gmail.com",
-      to: "joseluissequeirag@gmail.com",
+      from: process.env.EMAIL,
+      to: process.env.EMAIL,
       subject: req.body.subject,
       text:
         "\nfrom: " +
@@ -51,6 +52,6 @@ router.post("/email", (req, res) => {
 
 app.use(router);
 //server
-app.listen("3000", () => {
+app.listen(process.env.PORT || "3000", () => {
   console.log("server:3000");
 });
