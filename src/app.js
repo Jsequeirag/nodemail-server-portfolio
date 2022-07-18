@@ -20,19 +20,13 @@ var transporter = nodemailer.createTransport({
 //send email
 router.post("/email", (req, res) => {
   try {
-    if (!req.body.text || !req.body.companyemail || !req.body.subject)
+    if (!req.body.text || !req.body.companyemail)
       return res.json({ message: "complete all fields" });
     var mailOptions = {
       from: process.env.EMAIL,
       to: process.env.EMAIL,
-      subject: req.body.subject,
-      text:
-        "\nfrom: " +
-        req.body.companyemail +
-        "\nsubject: " +
-        req.body.subject +
-        "\nmessage: " +
-        req.body.text,
+      subject: req.body.companyemail,
+      text: "\nfrom: " + req.body.companyemail + "\nmessage: " + req.body.text,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
