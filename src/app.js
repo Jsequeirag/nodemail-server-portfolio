@@ -32,10 +32,12 @@ router.post("/email", (req, res) => {
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
-        res.status(200).json({ message: "The email could not be sent" });
+        res
+          .status(200)
+          .json({ message: "The email could not be sent", emailStatus: false });
       } else {
         console.log("Email sent: " + info.response);
-        res.status(200).json({ message: "Sent email" });
+        res.status(200).json({ message: "Sent email", emailStatus: true });
       }
     });
   } catch (e) {
