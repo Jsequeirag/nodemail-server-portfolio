@@ -22,6 +22,7 @@ const projectSchema = new mongoose.Schema({
   title: { type: String },
   description: { type: String },
   link: { type: String },
+  github: { type: String },
   photo: { type: String },
 });
 const model = mongoose.model("project", projectSchema);
