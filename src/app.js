@@ -6,6 +6,9 @@ var nodemailer = require("nodemailer");
 require("dotenv").config();
 //router
 const router = express.Router();
+//middlewares
+app.use(cors());
+app.use(express.json());
 //nodemail config
 var transporter = nodemailer.createTransport({
   service: "gmail",
@@ -56,10 +59,8 @@ router.get("/projects", async (req, res) => {
   res.status(200).json(projects);
 });
 
-//middlewares
 app.use(router);
-app.use(cors());
-app.use(express.json());
+
 
 //server and database connection
 mongoose
