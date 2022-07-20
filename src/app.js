@@ -1,15 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const mongoose = require("mongoose");
+var nodemailer = require("nodemailer");
 require("dotenv").config();
-//middlewares
-app.use(cors());
-app.use(express.json());
 //router
 const router = express.Router();
-//nodemail
-var nodemailer = require("nodemailer");
-
+//nodemail config
 var transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -17,6 +14,14 @@ var transporter = nodemailer.createTransport({
     pass: process.env.PASSWORD,
   },
 });
+
+const projectSchema = new mongoose.Schema({
+  title: { type: String },
+  description: { type: String },
+  link: { type: String },
+  photo: { type: String },
+});
+const model = mongoose.model("project", projectSchema);
 //send email
 router.post("/email", (req, res) => {
   try {
@@ -45,9 +50,25 @@ router.post("/email", (req, res) => {
     res.status(500).json({ message: e });
   }
 });
-
-app.use(router);
-//server
-app.listen(process.env.PORT || "3000", () => {
-  console.log("server:3000");
+//get projects
+router.get("/projects", async (req, res) => {
+  const projects = await model.find();
+  res.status(200).json(projects);
 });
+
+//middlewares
+app.use(router);
+app.use(cors());
+app.use(express.json());
+
+//server and database connection
+mongoose
+  .connect(process.env.MONGO)
+  .then((res) => {
+    app.listen(process.env.PORT || "3000", () => {
+      console.log("server:3000");
+    });
+  })
+  .catch((e) => {
+    console.log(e);
+  });
